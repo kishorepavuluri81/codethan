@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.aarp.www</groupId>
+    <artifactId>aarp-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../parent/pom.xml</relativePath>
+  </parent>
+
+  <artifactId>aarp-www-all</artifactId>
+  <packaging>content-package</packaging>
+  <version>1.0-SNAPSHOT</version>
+
+  <name>AARP WWW All</name>
+
+  <description>Builds single project artifact from project dependencies</description>
+
+  <dependencies>
+    <!-- ADD dependencies to sibling modules here -->
+ <!--  <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>aarp-legacy-all</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <type>content-package</type>
+    </dependency> -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>aarp-foundation-all</artifactId>
+      <version>1.0.1-${build.qualifier}</version>
+      <type>content-package</type>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>aarp-overlay-all</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <type>content-package</type>
+    </dependency>
+    <!-- 
+    <dependency>
+      <groupId>org.aarp.travel</groupId>
+      <artifactId>travel-all</artifactId>
+      <type>content-package</type>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+     -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>aarp-everywhere-all</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <type>content-package</type>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>aarp-now-all</artifactId>
+      <version>1.0-SNAPSHOT</version>
+      <type>content-package</type>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>aarp-dbr-all</artifactId>
+      <version>1.0.1-${build.qualifier}</version>
+      <type>content-package</type>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>aarp-staying-sharp-all</artifactId>
+      <version>1.0.1-${build.qualifier}</version>
+      <type>content-package</type>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.day.jcr.vault</groupId>
+        <artifactId>content-package-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <configuration>
+        	<failOnError>true</failOnError>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install-package-author</id>
+            <goals>
+              <goal>package</goal>
+              <!--  <goal>install</goal> -->
+            </goals>
+            <configuration>
+
+              <subPackages>
+
+                <!-- Add references to generated sibling module vault packages
+                  here -->
+              <!--<subPackage>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>aarp-legacy-all</artifactId>
+                  <filter>true</filter>
+                </subPackage> -->
+                <subPackage>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>aarp-foundation-all</artifactId>
+                  <filter>true</filter>
+                </subPackage>
+                <subPackage>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>aarp-overlay-all</artifactId>
+                  <filter>true</filter>
+                </subPackage>
+                <!-- 
+                <subPackage>
+                  <groupId>org.aarp.travel</groupId>
+                  <artifactId>travel-all</artifactId>
+                  <filter>true</filter>
+                </subPackage>
+                 -->
+                <subPackage>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>aarp-everywhere-all</artifactId>
+                  <filter>true</filter>
+                </subPackage>
+				<subPackage>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>aarp-now-all</artifactId>
+                  <filter>true</filter>
+                </subPackage>
+                <subPackage>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>aarp-dbr-all</artifactId>
+                  <filter>true</filter>
+                </subPackage>
+                <subPackage>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>aarp-staying-sharp-all</artifactId>
+                  <filter>true</filter>
+                </subPackage>
+              </subPackages>
+
+          </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-antrun-plugin</artifactId>
+              <version>1.4</version>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+
+  	<profile>
+  		<id>local</id>
+  		<build>
+  			<plugins>
+  				<plugin>
+            		<groupId>com.day.jcr.vault</groupId>
+            		<artifactId>content-package-maven-plugin</artifactId>
+            		<executions>
+            			<execution>
+			               <id>install-package-author</id>
+			               <goals>
+			                 <goal>install</goal>
+			               </goals>
+			               <configuration>
+			                 <targetURL>http://${sling.host}:${sling.port}${crx.http.servicePath}</targetURL>
+			               </configuration>
+            			</execution>
+            		</executions>
+  				</plugin>
+  			</plugins>
+  		</build>
+  	</profile>
+
+  	<profile>
+  		<id>local-publish</id>
+  		<properties>
+  			<sling.port>4503</sling.port>
+  		</properties>
+  		<build>
+  			<plugins>
+  				<plugin>
+            		<groupId>com.day.jcr.vault</groupId>
+            		<artifactId>content-package-maven-plugin</artifactId>
+            		<executions>
+            			<execution>
+			               <id>install-package-publish</id>
+			               <goals>
+			                 <goal>install</goal>
+			               </goals>
+			               <configuration>
+			                 <targetURL>http://${sling.host}:${sling.port}${crx.http.servicePath}</targetURL>
+			               </configuration>
+            			</execution>
+            		</executions>
+  				</plugin>
+  			</plugins>
+  			</build>
+  	</profile>
+
+  	<profile>
+      <id>deploy_all</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>com.day.jcr.vault</groupId>
+              <artifactId>content-package-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>install-aem-author</id>
+                  <goals>
+                    <goal>install</goal>
+                  </goals>
+                </execution>
+                <execution>
+                  <id>install-aem-publish</id>
+                  <goals>
+                    <goal>install</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+
+    <profile>
+      <id>deploy_all_author</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>com.day.jcr.vault</groupId>
+              <artifactId>content-package-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>install-aem-author</id>
+                  <goals>
+                    <goal>install</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+
+    <profile>
+      <id>deploy_all_publish</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>com.day.jcr.vault</groupId>
+              <artifactId>content-package-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>install-aem-publish</id>
+                  <goals>
+                    <goal>install</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+
+    <!-- Deploy to Production Profile -->
+
+    <profile>
+      <id>deploy_all_prod</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>com.day.jcr.vault</groupId>
+              <artifactId>content-package-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>install-aem-author</id>
+                  <goals>
+                    <goal>install</goal>
+                  </goals>
+                </execution>
+                <execution>
+                  <id>install-aem-publish</id>
+                  <goals>
+                    <goal>install</goal>
+                  </goals>
+                </execution>
+                <execution>
+                  <id>install-aem-publish2</id>
+                  <goals>
+                    <goal>install</goal>
+                  </goals>
+                </execution>
+                <execution>
+                  <id>install-aem-publish3</id>
+                  <goals>
+                    <goal>install</goal>
+                  </goals>
+                </execution>
+                <execution>
+                  <id>install-aem-publish4</id>
+                  <goals>
+                    <goal>install</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+
+    <!-- End Deploy to Production Profile -->
+
+  </profiles>
+
+</project>
